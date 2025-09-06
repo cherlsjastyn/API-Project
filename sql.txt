@@ -1,0 +1,45 @@
+-- Create the database
+CREATE DATABASE IF NOT EXISTS inventory_db;
+USE inventory_db;
+
+-- Users table (for auth)
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  role ENUM('admin', 'manager', 'staff') DEFAULT 'staff'
+);
+
+-- Items table (inventory items)
+CREATE TABLE IF NOT EXISTS items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  quantity INT DEFAULT 0,
+  status ENUM('available', 'under maintenance', 'not available') DEFAULT 'available',
+  price DECIMAL(10,2) DEFAULT 0.00
+);
+
+
+-- Orders table
+CREATE TABLE IF NOT EXISTS orders (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  item_id INT NOT NULL,
+  quantity INT NOT NULL,
+  user_id INT,
+  order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Logs table (activity logs)
+CREATE TABLE IF NOT EXISTS logs (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  action VARCHAR(255),
+  user_id INT,
+  description TEXT,
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+INSERT INTO users (username, password, role)
+VALUES ('admin', '1234', 'admin');
