@@ -1,6 +1,6 @@
 -- Create the database
-CREATE DATABASE IF NOT EXISTS inventory_db;
-USE inventory_db;
+CREATE DATABASE IF NOT EXISTS inventoryy_db;
+USE inventoryy_db;
 
 -- Users table (for auth)
 CREATE TABLE IF NOT EXISTS users (
@@ -43,3 +43,12 @@ CREATE TABLE IF NOT EXISTS logs (
 
 INSERT INTO users (username, password, role)
 VALUES ('admin', '1234', 'admin');
+
+CREATE INDEX idx_orders_item_id ON orders(item_id);
+CREATE INDEX idx_orders_user_id ON orders(user_id);
+CREATE INDEX idx_logs_user_id ON logs(user_id);
+
+ALTER TABLE items ADD CONSTRAINT chk_quantity CHECK (quantity >= 0);
+
+INSERT INTO users (username, password, role)
+VALUES ('admin', '<hashed_password_here>', 'admin');

@@ -11,7 +11,6 @@ router.get('/', async (req, res) => {
       LEFT JOIN users u ON l.user_id = u.id
       ORDER BY l.timestamp DESC
     `);
-
     res.json(logs);
   } catch (error) {
     console.error(error);
@@ -19,13 +18,10 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Add a new log (with item_id + quantity)
+// Add a new log manually
 router.post('/', async (req, res) => {
   const { action, user_id, item_id, quantity } = req.body;
-
-  // store item_id and quantity inside description
   const description = `Item ID: ${item_id}, Quantity: ${quantity}`;
-
   try {
     await pool.query(
       'INSERT INTO logs (action, user_id, description) VALUES (?, ?, ?)',
